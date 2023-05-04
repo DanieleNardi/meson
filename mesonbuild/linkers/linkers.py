@@ -288,6 +288,21 @@ class Xc16Linker(StaticLinker):
     def get_linker_always_args(self) -> T.List[str]:
         return ['rcs']
 
+class Xc8Linker(StaticLinker):
+
+    def __init__(self, exelist: T.List[str]):
+        super().__init__(exelist)
+        self.id = 'xc8-ar'
+
+    def can_linker_accept_rsp(self) -> bool:
+        return False
+
+    def get_output_args(self, target: str) -> T.List[str]:
+        return [f'{target}']
+
+    def get_linker_always_args(self) -> T.List[str]:
+        return ['rcs']
+
 class CompCertLinker(StaticLinker):
 
     def __init__(self, exelist: T.List[str]):
@@ -1012,6 +1027,49 @@ class Xc16DynamicLinker(DynamicLinker):
 
     def get_search_args(self, dirname: str) -> 'T.NoReturn':
         raise OSError('xc16-gcc does not have a search dir argument')
+
+    def get_allow_undefined_args(self) -> T.List[str]:
+        return []
+
+    def get_soname_args(self, env: 'Environment', prefix: str, shlib_name: str,
+                        suffix: str, soversion: str, darwin_versions: T.Tuple[str, str]) -> T.List[str]:
+        return []
+
+    def build_rpath_args(self, env: 'Environment', build_dir: str, from_dir: str,
+                         rpath_paths: T.Tuple[str, ...], build_rpath: str,
+                         install_rpath: str) -> T.Tuple[T.List[str], T.Set[bytes]]:
+        return ([], set())
+    
+class Xc8DynamicLinker(DynamicLinker):
+
+    """Linker for Microchip XC8 compiler."""
+
+    id = 'xc8-cc'
+
+    def __init__(self, for_machine: mesonlib.MachineChoice,
+                 *, version: str = 'unknown version'):
+        super().__init__(['xc8-cc'], for_machine, '', [],
+                         version=version)
+
+    def get_link_whole_for(self, args: T.List[str]) -> T.List[str]:
+        if not args:
+            return args
+        return self._apply_prefix('--start-group') + args + self._apply_prefix('--end-group')
+
+    def get_accepts_rsp(self) -> bool:
+        return False
+
+    def get_lib_prefix(self) -> str:
+        return ''
+
+    def get_std_shared_lib_args(self) -> T.List[str]:
+        return []
+
+    def get_output_args(self, outputname: str) -> T.List[str]:
+        return [f'-o{outputname}']
+
+    def get_search_args(self, dirname: str) -> 'T.NoReturn':
+        raise OSError('xc8-cc does not have a search dir argument')
 
     def get_allow_undefined_args(self) -> T.List[str]:
         return []

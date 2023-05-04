@@ -1,0 +1,26 @@
+[binaries]
+c = 'xc8-cc'
+ar = 'xc8-ar'
+strip = 'xc8-cc'
+c_ld = 'xc8-cc'
+
+[host_machine]
+system = 'bare metal'
+cpu_family = 'pic'
+cpu = '16lf18877'
+endian = 'little'
+
+[properties]
+needs_exe_wrapper = true
+
+[built-in options]
+c_args = [
+    '-c',
+    '-mcpu=16LF18877'
+    # '-omf=elf'
+    ]
+c_link_args = [
+    '-mcpu=16LF18877',
+    # '-omf=elf',
+    # '-Wl,--script=p16LF18877.gld,'
+    ]

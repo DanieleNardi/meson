@@ -39,6 +39,7 @@ These are return values of the `get_id` (Compiler family) and
 | ti        | Texas Instruments C/C++ Compiler |                 |
 | valac     | Vala compiler                    |                 |
 | xc16      | Microchip XC16 C compiler        |                 |
+| xc8       | Microchip XC8 C compiler         |                 |
 | cython    | The Cython compiler              |                 |
 | nasm      | The NASM compiler (Since 0.64.0) |                 |
 | yasm      | The YASM compiler (Since 0.64.0) |                 |
@@ -65,6 +66,7 @@ These are return values of the `get_linker_id` method in a compiler object.
 | optlink    | optlink (used with DMD)                     |
 | rlink      | The Renesas linker, used with CCrx only     |
 | xc16-ar    | The Microchip linker, used with XC16 only   |
+| xc8-ar     | The Microchip linker, used with XC8 only    |
 | ar2000     | The Texas Instruments linker, used with C2000 only |
 | ti-ar      | The Texas Instruments linker |
 | armlink    | The ARM linker (arm and armclang compilers) |
@@ -103,6 +105,7 @@ set in the cross file.
 | c2000               | 32 bit C2000 processor   |
 | csky                | 32 bit CSky processor    |
 | dspic               | 16 bit Microchip dsPIC   |
+| pic                 | 8 bit Microchip PIC      |
 | e2k                 | MCST Elbrus processor    |
 | ft32                | 32 bit Bridgetek MCU     |
 | ia64                | Itanium processor        |

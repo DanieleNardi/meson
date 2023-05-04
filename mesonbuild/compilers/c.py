@@ -23,6 +23,7 @@ from .c_function_attributes import C_FUNC_ATTRIBUTES
 from .mixins.clike import CLikeCompiler
 from .mixins.ccrx import CcrxCompiler
 from .mixins.xc16 import Xc16Compiler
+from .mixins.xc8 import Xc8Compiler
 from .mixins.compcert import CompCertCompiler
 from .mixins.ti import TICompiler
 from .mixins.arm import ArmCompiler, ArmclangCompiler
@@ -637,6 +638,51 @@ class Xc16CCompiler(Xc16Compiler, CCompiler):
         CCompiler.__init__(self, ccache, exelist, version, for_machine, is_cross,
                            info, exe_wrapper, linker=linker, full_version=full_version)
         Xc16Compiler.__init__(self)
+
+    def get_options(self) -> 'MutableKeyedOptionDictType':
+        opts = CCompiler.get_options(self)
+        key = OptionKey('std', machine=self.for_machine, lang=self.language)
+        opts[key].choices = ['none', 'c89', 'c99', 'gnu89', 'gnu99']
+        return opts
+
+    def get_no_stdinc_args(self) -> T.List[str]:
+        return []
+
+    def get_option_compile_args(self, options: 'KeyedOptionDictType') -> T.List[str]:
+        args = []
+        key = OptionKey('std', machine=self.for_machine, lang=self.language)
+        std = options[key]
+        if std.value != 'none':
+            args.append('-ansi')
+            args.append('-std=' + std.value)
+        return args
+
+    def get_compile_only_args(self) -> T.List[str]:
+        return []
+
+    def get_no_optimization_args(self) -> T.List[str]:
+        return ['-O0']
+
+    def get_output_args(self, target: str) -> T.List[str]:
+        return [f'-o{target}']
+
+    def get_werror_args(self) -> T.List[str]:
+        return ['-change_message=error']
+
+    def get_include_args(self, path: str, is_system: bool) -> T.List[str]:
+        if path == '':
+            path = '.'
+        return ['-I' + path]
+    
+class Xc8CCompiler(Xc8Compiler, CCompiler):
+    def __init__(self, ccache: T.List[str], exelist: T.List[str], version: str, for_machine: MachineChoice,
+                 is_cross: bool, info: 'MachineInfo',
+                 exe_wrapper: T.Optional['ExternalProgram'] = None,
+                 linker: T.Optional['DynamicLinker'] = None,
+                 full_version: T.Optional[str] = None):
+        CCompiler.__init__(self, ccache, exelist, version, for_machine, is_cross,
+                           info, exe_wrapper, linker=linker, full_version=full_version)
+        Xc8Compiler.__init__(self)
 
     def get_options(self) -> 'MutableKeyedOptionDictType':
         opts = CCompiler.get_options(self)

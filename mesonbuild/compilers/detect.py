@@ -230,6 +230,8 @@ def detect_static_linker(env: 'Environment', compiler: Compiler) -> StaticLinker
             return linkers.CcrxLinker(linker)
         if out.startswith('GNU ar') and 'xc16-ar' in linker_name:
             return linkers.Xc16Linker(linker)
+        if out.startswith('GNU ar') and 'xc8-ar' in linker_name:
+            return linkers.Xc8Linker(linker)
         if 'Texas Instruments Incorporated' in out:
             if 'ar2000' in linker_name:
                 return linkers.C2000Linker(linker)
@@ -309,6 +311,8 @@ def _detect_c_or_cpp_compiler(env: 'Environment', lang: str, for_machine: Machin
         elif 'ccrx' in compiler_name:
             arg = '-v'
         elif 'xc16' in compiler_name:
+            arg = '--version'
+        elif 'xc8' in compiler_name:
             arg = '--version'
         elif 'ccomp' in compiler_name:
             arg = '-version'
@@ -562,10 +566,18 @@ def _detect_c_or_cpp_compiler(env: 'Environment', lang: str, for_machine: Machin
                 ccache, compiler, version, for_machine, is_cross, info,
                 exe_wrap, full_version=full_version, linker=linker)
 
-        if 'Microchip Technology' in out:
+        if 'Microchip MPLAB XC16' in out:
             cls = c.Xc16CCompiler
             env.coredata.add_lang_args(cls.language, cls, for_machine, env)
             linker = linkers.Xc16DynamicLinker(for_machine, version=version)
+            return cls(
+                ccache, compiler, version, for_machine, is_cross, info,
+                exe_wrap, full_version=full_version, linker=linker)
+            
+        if 'Microchip MPLAB XC8' in out:
+            cls = c.Xc8CCompiler
+            env.coredata.add_lang_args(cls.language, cls, for_machine, env)
+            linker = linkers.Xc8DynamicLinker(for_machine, version=version)
             return cls(
                 ccache, compiler, version, for_machine, is_cross, info,
                 exe_wrap, full_version=full_version, linker=linker)
