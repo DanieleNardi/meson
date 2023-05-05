@@ -368,6 +368,8 @@ class MachineInfo(HoldableObject):
     def get_object_suffix(self) -> str:
         if self.is_windows():
             return 'obj'
+        elif self.cpu_family == 'pic':
+            return 'p1'
         else:
             return 'o'
 
