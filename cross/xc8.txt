@@ -1,3 +1,13 @@
+# This file assumes that path to the Microchip XC8 toolchain is added
+# to the environment(PATH) variable, so that Meson can find
+# xc8-cc and xc8-ar while building
+
+[constants]
+# enter product code without prefix PIC or AVR ar ATtiny
+# digit 'xc8 --chipinfo' in command line for list of 
+# supported product codes of your version or installation
+cpu_code = '16LF18877'
+
 [binaries]
 c = 'xc8-cc'
 ar = 'xc8-ar'
@@ -6,21 +16,16 @@ c_ld = 'xc8-cc'
 
 [host_machine]
 system = 'bare metal'
-cpu_family = 'pic'
-cpu = '16lf18877'
+cpu_family = 'pic_avr'
+cpu = cpu_code
 endian = 'little'
 
-[properties]
-needs_exe_wrapper = true
-
 [built-in options]
+# minimum requirement to let meson identify the compiler and let it works correctly
+# remember to add the -mdfp compiler argument into your meson.build file
 c_args = [
     '-c',
-    '-mcpu=16LF18877'
-    # '-omf=elf'
+    '-mcpu=' + cpu_code
     ]
-c_link_args = [
-    '-mcpu=16LF18877',
-    # '-omf=elf',
-    # '-Wl,--script=p16LF18877.gld,'
-    ]
+
+c_link_args = [ '-mcpu=' + cpu_code ]

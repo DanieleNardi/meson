@@ -105,7 +105,7 @@ set in the cross file.
 | c2000               | 32 bit C2000 processor   |
 | csky                | 32 bit CSky processor    |
 | dspic               | 16 bit Microchip dsPIC   |
-| pic                 | 8 bit Microchip PIC      |
+| pic_avr             | 8 bit Microchip PIC/AVR  |
 | e2k                 | MCST Elbrus processor    |
 | ft32                | 32 bit Bridgetek MCU     |
 | ia64                | Itanium processor        |

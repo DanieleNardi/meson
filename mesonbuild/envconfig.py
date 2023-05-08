@@ -46,7 +46,7 @@ known_cpu_families = (
     'c2000',
     'csky',
     'dspic',
-    'pic'
+    'pic_avr'
     'e2k',
     'ft32',
     'ia64',
@@ -368,7 +368,7 @@ class MachineInfo(HoldableObject):
     def get_object_suffix(self) -> str:
         if self.is_windows():
             return 'obj'
-        elif self.cpu_family == 'pic':
+        elif self.cpu_family == 'pic_avr':
             return 'p1'
         else:
             return 'o'
